@@ -12,9 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "inferno": "^0.7.22",
-    "inferno-component": "^0.7.22",
-    "inferno-dom": "^0.7.22"
+    "inferno": "^0.7.23",
+    "inferno-component": "^0.7.23",
+    "inferno-dom": "^0.7.23",
+    "ramda": "^0.21.0"
   },
   "devDependencies": {
     "babel-core": "^6.9.1",

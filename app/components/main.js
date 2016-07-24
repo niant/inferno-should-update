@@ -1,7 +1,7 @@
-
 import Inferno from 'inferno';
 import InfernoDOM from 'inferno-dom';
 import Component from 'inferno-component';
+import R from 'ramda';
 
 class Menu extends Component {
   constructor(props) {
@@ -24,20 +24,24 @@ class Menu extends Component {
       <div>
         <button onClick={this.toggleMenu}>Toggle menu</button>
         <div style={displayMenu}>
+          <StatefulComponent item={this.props.item} >
+            <li>Here we go</li>
+          </StatefulComponent>
           <StatelessComponent item={this.props.item} onComponentShouldUpdate={onComponentShouldUpdate} >
             <li>Here we go</li>
           </StatelessComponent>
         </div>
+
       </div>);
   }
 }
 
 const onComponentShouldUpdate = (domNode, lastProps, nextProps) => {
-  // lastProps.children will not exist, but newProps.children does
-  // is it meant to be like so? in stateful component it behaves differently
-  const isEqualProps = (nextProps.item === lastProps.item && nextProps.children === lastProps.children);
-  console.log('should update?', lastProps, nextProps, !isEqualProps);
-  return !isEqualProps;
+  console.log(lastProps, nextProps);
+  console.log('items equal?', R.equals(lastProps.item, nextProps.item));
+  console.log('children equal?', R.equals(lastProps.children, nextProps.children));
+  console.log('children dom properties', lastProps.children.dom, nextProps.children.dom);
+  return !R.equals(lastProps, nextProps);
 }
 
 const StatelessComponent = ({ item, children }) => {
@@ -51,6 +55,26 @@ const StatelessComponent = ({ item, children }) => {
       </ul>
     </div>
   );
+}
+
+class StatefulComponent extends Component {
+  shouldComponentUpdate(nextProps) {
+    return onComponentShouldUpdate(null, this.props, nextProps);
+  }
+
+  render() {
+    const { item, children } = this.props;
+    console.log('render');
+    return (
+      <div>
+        <h2>Stateful stuff</h2>
+        <p>{item.name}</p>
+        <ul>
+          {children}
+        </ul>
+      </div>
+    );
+  }
 }
 
 const demoItem = { name: 'foo' };
